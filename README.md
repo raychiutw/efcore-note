@@ -58,8 +58,8 @@ var returnData = new AccountSearchResponse()
 new
 
 ```csharp
-var accounts = this._process.GetAccount(request.Account, take, skip);
-var result = this._mapper.Map<List<EPKAccount>>(accounts);
+var accounts = _process.GetAccount(request.Account, take, skip);
+var result = _mapper.Map<List<EPKAccount>>(accounts);
 
 var total = this._process.GetTotalAccount(request.Account);
 var returnData = new CarCoinSearchResponse()
