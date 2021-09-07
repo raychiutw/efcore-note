@@ -58,7 +58,7 @@ var returnData = new AccountSearchResponse()
 new
 
 ```csharp
-var accounts = this._process.GetAccount(request.Account);
+var accounts = this._process.GetAccount(request.Account, take, skip);
 var result = this._mapper.Map<List<EPKAccount>>(accounts);
 
 var total = this._process.GetTotalAccount(request.Account);
@@ -76,11 +76,17 @@ var returnData = new CarCoinSearchResponse()
 };
 ```
 
-增加 Total 相關程式
+修改 GetAccount, 增加 Take 與 Skip, 與增加 Total 相關程式
 
 > Porcess
 
 ```csharp
+public int GetAccount(string account, int take, int skip)
+{
+    var count = _repository.Find(account, take, skip);
+    return count;
+}
+
 public int GetTotalAccount(string account)
 {
     var count = _repository.Count(account);
@@ -88,9 +94,21 @@ public int GetTotalAccount(string account)
 }
 ```
 
-> Repository
+> Repository 修改
 
 ```csharp
+public int GetAccount(string account, int take, int skip)
+{
+    var accounts = _context.EpkAccAccount
+      .AsNoTracking()
+      .Skip(skip)
+      .Take(take)
+      .Select(account)
+      .ToList()
+    
+    return accounts;
+}
+
 public int Count(string account)
 {
     var count = _context.EpkAccAccount
