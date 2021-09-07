@@ -30,7 +30,7 @@ services.AddDbContext<EpkDbContext>(options =>
 ```
 
 3. 當 EFCore 組出沒有效率的語法時,可以調整 linq 順序與寫法, 可能會有不同 sql
-4. 最後可提早輸出 (ToList, First, ForEach...), 善用後端資料量小運算快的優勢
+4. 最後可提早輸出 (Count, Any, ToList, First, Single, ForEach...), 善用後端資料量小運算快的優勢
 
 其他參考說明
 
@@ -59,10 +59,10 @@ var returnData = new AccountSearchResponse()
 new
 
 ```csharp
-var carCoinReqs = await this._process.GetAsync(searchDto);
-var result = this._mapper.Map<List<CarCoinReqDto>>(carCoinReqs);
+var accounts = this._process.GetAccount(request.Account);
+var result = this._mapper.Map<List<EPKAccount>>(accounts);
 
-var total = await this._process.GetTotalCountAsync(searchDto);
+var total = this._process.GetTotalAccount(request.Account);
 var returnData = new CarCoinSearchResponse()
 {
     ReturnCode = "00",
@@ -75,4 +75,29 @@ var returnData = new CarCoinSearchResponse()
         RowCount = total
     }
 };
+```
+
+增加 Total 相關程式
+
+> Porcess
+
+```csharp
+public int GetTotalAccount(string account)
+{
+    var count = _repository.Count(account);
+    return count;
+}
+```
+
+> Repository
+
+```csharp
+public int Count(string account)
+{
+    var count = _context.EpkAccAccount
+      .AsNoTracking()
+      .Select(account)
+      .Count();
+    return count;
+}
 ```
