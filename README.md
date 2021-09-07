@@ -58,11 +58,14 @@ var returnData = new AccountSearchResponse()
 new
 
 ```csharp
+var take = request.PageSize
+var skip = request.PageSize * (request.CurrentPage - 1)
+
 var accounts = _process.GetAccount(request.Account, take, skip);
 var result = _mapper.Map<List<EPKAccount>>(accounts);
 
 var total = this._process.GetTotalAccount(request.Account);
-var returnData = new CarCoinSearchResponse()
+var returnData = new AccountSearchResponse()
 {
     ReturnCode = "00",
     CarCoinReqs = new PagedResult<CarCoinReqDto>()
