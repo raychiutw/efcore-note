@@ -1,7 +1,6 @@
 # efcore-note
 
-1. 盡量保持 IQuaryable 延遲查詢 DB 的時間點
-
+1. 不要提早輸出到記憶體,盡量保持 IQuaryable 延遲查詢 DB 的時間點, 以下情境會輸出到記憶體, (Count, Any, ToList, First, Single, ForEach...)
 2. 查看 EF Core 組出的 T-SQL 並觀察執行計畫,優化語法
 
 步驟1 appsetting.json - 增加顯示 efcore sql `"Microsoft.EntityFrameworkCore.Database.Command": "Information"`
